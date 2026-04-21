@@ -1,0 +1,32 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Cấu hình môi trường Python
+.env
+.venv/
+venv/
+ENV/
+env.bak/
+env/
+
+# Các file logs
+*.log
+
+# Cấu hình editor
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# File database / session tạm (nếu bạn dùng)
+*.sqlite
+*.db
+*.session
+
+# MacOS
+.DS_Store
+
+# Windows
+Thumbs.db
