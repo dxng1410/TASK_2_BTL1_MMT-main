@@ -50,4 +50,21 @@ class Request:
         self.cookies = cookies
         
     def prepare(self, request, routes=None):
-        # TODO CODE
+            # 1. Trích xuất Method, Path, Version
+            self.method, self.path, self.version = self.extract_request_line(request)
+            if not self.method:
+                return
+                
+            # 2. Tách Headers và Body
+            raw_headers, self.body = self.fetch_headers_body(request)
+            
+            # 3. Phân tích Headers
+            self.headers = self.prepare_headers(raw_headers)
+            
+            # 4. Phân tích Cookies
+            self.parse_cookies()
+            
+            # 5. Khớp Route để lấy hàm xử lý (hook)
+            if routes:
+                self.routes = routes
+                self.hook = self.routes.get((self.method.upper(), self.path))

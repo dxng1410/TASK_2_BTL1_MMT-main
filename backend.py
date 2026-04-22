@@ -16,7 +16,12 @@ def run_backend(ip, port, routes):
 
     while True:
         conn, addr = server.accept()
-        # TODO CODE threading
+        # Tạo và khởi chạy thread mới để xử lý client
+        client_thread = threading.Thread(
+            target=handle_client, 
+            args=(ip, port, conn, addr, routes)
+        )
+        client_thread.start()
 
 def create_backend(ip, port, routes={}):
     run_backend(ip, port, routes)

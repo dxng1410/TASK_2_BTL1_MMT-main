@@ -9,8 +9,46 @@ USERS = {
 SESSIONS = {}
 
 def check_cookie(headers):
-    # TODO CODE
+    cookie_header = headers.get("cookie")
+    
+    if not cookie_header:
+        return None
+        
+    parts = cookie_header.split(";")
+    for p in parts:
+        if "=" in p:
+            k, v = p.strip().split("=", 1)
+            # Kiểm tra xem cookie có phải là session và có hợp lệ không
+            if k == "session" and v in SESSIONS:
+                return SESSIONS[v]
+                
+    return None
 
+def check_basic_auth(headers):
+    # Lấy header authorization (request.py đã parse các key thành chữ thường)
+    auth_header = headers.get("authorization")
+    
+    if not auth_header or not auth_header.startswith("Basic "):
+        return None
+        
+    try:
+        # Lấy phần chuỗi đã mã hóa Base64 phía sau chữ "Basic "
+        encoded_credentials = auth_header.split(" ", 1)[1]
+        
+        # Giải mã Base64
+        decoded_credentials = base64.b64decode(encoded_credentials).decode("utf-8")
+        
+        # Tách username và password (định dạng chuẩn là username:password)
+        username, password = decoded_credentials.split(":", 1)
+        
+        # Kiểm tra xem có khớp với database USERS hay không
+        if USERS.get(username) == password:
+            return username
+            
+    except Exception:
+        # Xử lý trường hợp chuỗi Base64 lỗi hoặc không đúng định dạng
+        return None
+        
     return None
 
 def require_auth(func):
